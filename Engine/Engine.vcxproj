@@ -138,6 +138,7 @@
   <ItemGroup>
     <ClInclude Include="ChiliException.h" />
     <ClInclude Include="ChiliWin.h" />
+    <ClInclude Include="Clock.h" />
     <ClInclude Include="Colors.h" />
     <ClInclude Include="Dude.h" />
     <ClInclude Include="DXErr.h" />
@@ -146,27 +147,35 @@
     <ClInclude Include="Goal.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Keyboard.h" />
+    <ClInclude Include="Levels.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="Meter.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Poo.h" />
+    <ClInclude Include="Random.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="SoundEffect.h" />
+    <ClInclude Include="SpriteCodex.h" />
     <ClInclude Include="Vec2.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Clock.cpp" />
     <ClCompile Include="Dude.cpp" />
     <ClCompile Include="DXErr.cpp" />
     <ClCompile Include="FrameTimer.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Goal.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="Meter.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Poo.cpp" />
+    <ClCompile Include="Random.cpp" />
     <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="SpriteCodex.cpp" />
     <ClCompile Include="Vec2.cpp" />
   </ItemGroup>
   <ItemGroup>

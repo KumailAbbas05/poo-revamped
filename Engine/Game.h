@@ -28,44 +28,71 @@
 #include "Goal.h"
 #include "Meter.h"
 #include "SoundEffect.h"
-#include <random>
 #include "FrameTimer.h"
+#include "Levels.h"
+
+#include "Random.h"
+#include "Clock.h"
 
 class Game
 {
-public:
-	Game( class MainWindow& wnd );
-	Game( const Game& ) = delete;
-	Game& operator=( const Game& ) = delete;
-	void Go();
-private:
-	void ComposeFrame();
-	void UpdateModel();
-	/********************************/
-	/*  User Functions              */
-	void DrawGameOver( int x,int y );
-	void DrawTitleScreen( int x,int y );
-	/********************************/
-private:
+	static constexpr int MAX_POOS = 100;
+	static constexpr float POO_SPAWN_PERIOD = 0.5f;
+	
 	MainWindow& wnd;
 	Graphics gfx;
+
 	/********************************/
 	/*  User Variables              */
 	FrameTimer ft;
-	std::random_device rd;
-	std::mt19937 rng;
-	std::uniform_real_distribution<float> xDist;
-	std::uniform_real_distribution<float> yDist;
+	Random rand;
+	TickClock pooSpawnClock;
+
 	Dude dude;
 	Goal goal;
 	Meter meter;
-	static constexpr int nPoo = 10;
-	Poo poos[nPoo];
-	bool isStarted = false;
-	bool isGameOver = false;
-	SoundEffect pickup = SoundEffect( { L"Sounds\\coin.wav" } );
+	Poo poos[MAX_POOS];
+
 	Sound title = Sound( L"Sounds\\title.wav" );
+	Sound lvlUpSound = Sound( L"Sounds\\lvlUp.wav" );
+	Sound gameOver = Sound( L"Sounds\\gameOver.wav" );
+	SoundEffect pickupCoin = SoundEffect( { L"Sounds\\coin.wav" } );
 	SoundEffect fart = SoundEffect( 
 		{ L"Sounds\\fart1.wav",L"Sounds\\fart2.wav" } );
+	SoundEffect pickupHeart = SoundEffect( { L"Sounds\\heart.wav" } );
+	SoundEffect pickupSoulHeart =  SoundEffect( { L"Sounds\\soulHeart.wav" } );
+
+	int nPoo = 0;
+	bool poosSpawning = true;
+	int poosToSpawn = 5;
+	int fastPoosToSpawn = 0;
+
+	int level = 0;
+	bool isStarted = false;
+	bool isGameOver = false;
 	/********************************/
+
+	void ComposeFrame();
+	void UpdateModel();
+
+	/********************************/
+	/*  User Functions              */
+	void SpawnPoo( float speed );
+	Goal::Type ChooseGoalType();
+	void GoalEffect( Goal::Type type );
+	/********************************/
+
+public:
+	Game( class MainWindow& wnd );
+
+	Game( const Game& ) = delete;
+	Game& operator=( const Game& ) = delete;
+
+	void Go()
+	{
+		gfx.BeginFrame();
+		UpdateModel();
+		ComposeFrame();
+		gfx.EndFrame();
+	}
 };

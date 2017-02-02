@@ -7,59 +7,39 @@
 class Goal
 {
 public:
-	Goal( const Vec2& pos_in )
-		:
-		pos( pos_in )
-	{}
-	void Draw( Graphics& gfx ) const
+	enum class Type
 	{
-		gfx.DrawRectDim( int( pos.x ),int( pos.y ),int( dimension ),int( dimension ),c );
-	}
-	bool TestCollision( const Dude& dude ) const
-	{
-		const float duderight = dude.GetPos().x + dude.GetWidth();
-		const float dudebottom = dude.GetPos().y + dude.GetHeight();
-		const float pooright = pos.x + dimension;
-		const float poobottom = pos.y + dimension;
+		COIN = 0,
+		HEART = 1,
+		HALF_HEART = 2,
+		SOUL_HEART = 3,
+		HALF_SOUL_HEART = 4
+	};
 
-		return
-			duderight >= pos.x &&
-			dude.GetPos().x <= pooright &&
-			dudebottom >= pos.y &&
-			dude.GetPos().y <= poobottom;
-	}
-	void Respawn( const Vec2& pos_in )
-	{
-		pos = pos_in;
-	}
-	void UpdateColor()
-	{
-		if( colorIncreasing )
-		{
-			if( c.GetR() >= 253 )
-			{
-				colorIncreasing = false;
-			}
-			else
-			{
-				c = Color( c.GetR() + 2,c.GetG() + 4,c.GetB() + 4 );
-			}
-		}
-		else
-		{
-			if( c.GetR() <= 127 )
-			{
-				colorIncreasing = true;
-			}
-			else
-			{
-				c = Color( c.GetR() - 2,c.GetG() - 4,c.GetB() - 4 );
-			}
-		}
-	}
 private:
-	static constexpr float dimension = 20;
-	Color c = { 127,0,0 };
-	bool colorIncreasing = true;
+	static constexpr Color COLOUR2 = { 255,127,39 };
+	static constexpr float SIZE = 20;
+	static constexpr float COLOURFACTOR_MAX = 1.6f;
+	static constexpr float COLOURFACTOR_MIN = 0.4f;
+	static constexpr float STROBE_RATE = 1.0f;
+
+	Color colour;
+	float colourFactor;
+	bool colourIncreasing;
 	Vec2 pos;
+	Type type = Type::COIN;
+
+	void DrawCoin( int x,int y,Graphics& gfx ) const;
+
+public:
+	Goal( const Vec2& pos );
+
+	void Respawn( const Vec2& pos, Type type );
+
+	bool TestCollision( const Dude& dude ) const;
+	void UpdateColor( float dt );
+
+	void Draw( Graphics& gfx ) const;
+
+	Type GetType() const { return type; }
 };

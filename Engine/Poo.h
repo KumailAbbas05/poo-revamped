@@ -6,15 +6,18 @@
 
 class Poo
 {
+	static constexpr float WIDTH = 24.0f;
+	static constexpr float HEIGHT = 24.0f;
+
+	Vec2 pos;
+	Vec2 vel;
+	bool initialized = false;
+
 public:
-	void Init( const Vec2& pos_in,const Vec2& vel_in );
+	static constexpr float NORM_SPEED = 180.0f;
+	static constexpr float FAST_SPEED = 360.0f;
+	void Init( const Vec2& position,const Vec2& direction,float speed );
 	void Update( float dt );
 	bool TestCollision( const Dude& dude ) const;
 	void Draw( Graphics& gfx ) const;
-private:
-	Vec2 pos;
-	Vec2 vel;
-	static constexpr float width = 24;
-	static constexpr float height = 24;
-	bool initialized = false;
 };

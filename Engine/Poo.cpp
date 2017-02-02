@@ -2,11 +2,11 @@
 #include "Graphics.h"
 #include <assert.h>
 
-void Poo::Init( const Vec2& pos_in,const Vec2& vel_in )
+void Poo::Init( const Vec2& position,const Vec2& direction,float speed )
 {
 	assert( initialized == false );
-	pos = pos_in;
-	vel = vel_in;
+	pos = position;
+	vel = direction.GetNormalized() * speed;
 	initialized = true;
 }
 
@@ -15,7 +15,7 @@ void Poo::Update( float dt )
 	assert( initialized == true );
 	pos += vel * dt;
 
-	const float right = pos.x + width;
+	const float right = pos.x + WIDTH;
 	if( pos.x < 0 )
 	{
 		pos.x = 0;
@@ -23,11 +23,11 @@ void Poo::Update( float dt )
 	}
 	else if( right >= float( Graphics::ScreenWidth ) )
 	{
-		pos.x = float( Graphics::ScreenWidth - 1 ) - width;
+		pos.x = float( Graphics::ScreenWidth - 1 ) - WIDTH;
 		vel.x = -vel.x;
 	}
 
-	const float bottom = pos.y + height;
+	const float bottom = pos.y + HEIGHT;
 	if( pos.y < 0 )
 	{
 		pos.y = 0;
@@ -35,7 +35,7 @@ void Poo::Update( float dt )
 	}
 	else if( bottom >= float( Graphics::ScreenHeight ) )
 	{
-		pos.y = float( Graphics::ScreenHeight - 1 ) - height;
+		pos.y = float( Graphics::ScreenHeight - 1 ) - HEIGHT;
 		vel.y = -vel.y;
 	}
 }
@@ -45,8 +45,8 @@ bool Poo::TestCollision( const Dude& dude ) const
 	assert( initialized == true );
 	const float duderight = dude.GetPos().x + dude.GetWidth();
 	const float dudebottom = dude.GetPos().y + dude.GetHeight();
-	const float pooright = pos.x + width;
-	const float poobottom = pos.y + height;
+	const float pooright = pos.x + WIDTH;
+	const float poobottom = pos.y + HEIGHT;
 
 	return
 		duderight >= pos.x &&

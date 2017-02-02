@@ -1,32 +1,28 @@
 #pragma once
 
 #include "Graphics.h"
+#include <cmath>
 
 class Meter
 {
+	static constexpr Color BG_COLOUR = Colors::Blue;
+	static constexpr Color METER_COLOUR = Colors::Cyan;
+	static constexpr float WIDTH = 200;
+	static constexpr int GIRTH = 12;
+	static constexpr int SCALE = 4;
+	static constexpr int MAX_LVL = 13;
+
+	float points = 0.0f;
+	float levelPoints = 10.0f;
+	float base = 1.0f;
+	bool justLeveled = false;
+
 public:
-	Meter( int x,int y )
-		:
-		x( x ),
-		y( y )
-	{}
-	void IncreaseLevel()
-	{
-		++level;
-	}
-	int GetLevel() const
-	{
-		return level;
-	}
-	void Draw( Graphics& gfx ) const
-	{
-		gfx.DrawRectDim( x,y,level * scale,girth,c );
-	}
-private:
-	static constexpr Color c = Colors::Blue;
-	static constexpr int girth = 12;
-	static constexpr int scale = 4;
-	int level = 0;
-	int x;
-	int y;
+	void Draw( int x,int y,Graphics& gfx ) const;
+
+	float GetPoints() const;
+	void AddPoints( float amt );
+	bool JustLeveled();
+	void SetLevelPoints( float levelPoints );
+	float GetLevelPoints() const;
 };
