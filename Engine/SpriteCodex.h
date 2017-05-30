@@ -5,6 +5,7 @@
 class SpriteCodex
 {
 public:
+	static void DrawPlanetChiliPresents( int x,int y,Graphics& gfx );
 	static void DrawGameOver( int x,int y,Graphics& gfx );
 	static void DrawTitle( int x,int y,Graphics& gfx );
 	static void DrawLevelUp( int x,int y,Graphics& gfx );

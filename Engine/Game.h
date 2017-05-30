@@ -47,20 +47,20 @@ class Game
 	FrameTimer ft;
 	Random rand;
 	TickClock pooSpawnClock;
+	TickClock planetChiliClock;
 
 	Dude dude;
 	Goal goal;
 	Meter meter;
 	Poo poos[MAX_POOS];
 
-	Sound title = Sound( L"Sounds\\title.wav" );
-	Sound lvlUpSound = Sound( L"Sounds\\lvlUp.wav" );
-	Sound gameOver = Sound( L"Sounds\\gameOver.wav" );
-	SoundEffect pickupCoin = SoundEffect( { L"Sounds\\coin.wav" } );
-	SoundEffect fart = SoundEffect( 
-		{ L"Sounds\\fart1.wav",L"Sounds\\fart2.wav" } );
-	SoundEffect pickupHeart = SoundEffect( { L"Sounds\\heart.wav" } );
-	SoundEffect pickupSoulHeart =  SoundEffect( { L"Sounds\\soulHeart.wav" } );
+	Sound sndTitle;
+	Sound sndLvlUp;
+	Sound sndGameOver;
+	SoundEffect sndCoin;
+	SoundEffect sndFart;
+	SoundEffect sndHeart;
+	SoundEffect sndSoulHeart;
 
 	int nPoo = 0;
 	bool poosSpawning = true;
@@ -68,6 +68,8 @@ class Game
 	int fastPoosToSpawn = 0;
 
 	int level = 0;
+	bool isPlanetChiliPresents = true;
+	int planetChiliPresents = 0;
 	bool isStarted = false;
 	bool isGameOver = false;
 	/********************************/

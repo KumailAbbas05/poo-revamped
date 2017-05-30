@@ -27,9 +27,27 @@ Game::Game( MainWindow& wnd ):
 	wnd( wnd ),
 	gfx( wnd ),
 	goal( Vec2( rand.GenXPos(),rand.GenYPos() ) ),
-	pooSpawnClock( POO_SPAWN_PERIOD )
+	pooSpawnClock( POO_SPAWN_PERIOD ),
+	planetChiliClock( 1.0f ),
+	sndTitle( L"Sounds\\title.wav" ),
+	sndLvlUp( L"Sounds\\lvlUp.wav" ),
+	sndGameOver( L"Sounds\\gameOver.wav" ),
+	sndCoin( {
+		L"Sounds\\coin0.wav",
+		L"Sounds\\coin1.wav",
+		L"Sounds\\coin2.wav",
+		L"Sounds\\coin3.wav",
+		L"Sounds\\coin4.wav",
+		L"Sounds\\coin5.wav",
+		L"Sounds\\coin6.wav",
+		L"Sounds\\coin7.wav",
+		L"Sounds\\coin8.wav",
+		L"Sounds\\coin9.wav" } ),
+	sndFart( { L"Sounds\\fart1.wav",L"Sounds\\fart2.wav" } ),
+	sndHeart( { L"Sounds\\heart.wav" } ),
+	sndSoulHeart( { L"Sounds\\soulHeart.wav" } )
 {
-	title.Play();
+	planetChiliClock.Start();
 }
 
 void Game::UpdateModel()
@@ -37,7 +55,24 @@ void Game::UpdateModel()
 	const float dt = ft.Mark();
 
 	goal.UpdateColor( dt );
-	if( isStarted && !isGameOver )
+	if( isPlanetChiliPresents )
+	{
+		planetChiliClock.Update( dt );
+		if( planetChiliClock.IsDone() )
+		{
+			++planetChiliPresents;
+			if( planetChiliPresents == 1 )
+			{
+				sndCoin.Play( rand.GetRNG() );
+			}
+			else if( planetChiliPresents == 3 )
+			{
+				isPlanetChiliPresents = false;
+				sndTitle.Play();
+			}
+		}
+	}
+	else if( isStarted && !isGameOver )
 	{
 		dude.Update( wnd.kbd,dt );
 		dude.ClampToScreen();
@@ -99,7 +134,7 @@ void Game::UpdateModel()
 
 		if( meter.JustLeveled() )
 		{
-			lvlUpSound.Play();
+			sndLvlUp.Play();
 			++level;
 			meter.SetLevelPoints( meter.GetLevelPoints() + float( level * 10 ) );
 
@@ -115,7 +150,7 @@ void Game::UpdateModel()
 		if( dude.IsDead() )
 		{
 			isGameOver = true;
-			gameOver.Play();
+			sndGameOver.Play();
 		}
 	}
 	else
@@ -140,7 +175,7 @@ void Game::SpawnPoo( float speed )
 	poos[ nPoo ].Init( pooPos,Vec2( rand.GenFrac(),rand.GenFrac() ),speed );
 	++nPoo;
 
-	fart.Play( rand.GetRNG() );
+	sndFart.Play( rand.GetRNG() );
 }
 
 Goal::Type Game::ChooseGoalType()
@@ -183,25 +218,25 @@ void Game::GoalEffect( Goal::Type type )
 	{
 	case Goal::Type::COIN:
 		meter.AddPoints( 2.5f );
-		pickupCoin.Play( rand.GetRNG() );
+		sndCoin.Play( rand.GetRNG() );
 		break;
 	case Goal::Type::HEART:
 		meter.AddPoints( 1.0f );
 		dude.Heal( 2 );
-		pickupHeart.Play( rand.GetRNG() );
+		sndHeart.Play( rand.GetRNG() );
 		break;
 	case Goal::Type::HALF_HEART:
 		meter.AddPoints( 1.75f );
 		dude.Heal( 1 );
-		pickupHeart.Play( rand.GetRNG() );
+		sndHeart.Play( rand.GetRNG() );
 		break;
 	case Goal::Type::SOUL_HEART:
 		dude.GiveSoul( 2 );
-		pickupSoulHeart.Play( rand.GetRNG() );
+		sndSoulHeart.Play( rand.GetRNG() );
 		break;
 	case Goal::Type::HALF_SOUL_HEART:
 		dude.GiveSoul( 1 );
-		pickupSoulHeart.Play( rand.GetRNG() );
+		sndSoulHeart.Play( rand.GetRNG() );
 		break;
 	default:
 		meter.AddPoints( 13.37f );
@@ -210,11 +245,15 @@ void Game::GoalEffect( Goal::Type type )
 
 void Game::ComposeFrame()
 {
-	if( !isStarted )
+	if( planetChiliPresents == 1 )
+	{
+		SpriteCodex::DrawPlanetChiliPresents( 361,290,gfx );
+	}
+	else if( planetChiliPresents == 3 && !isStarted )
 	{
 		SpriteCodex::DrawTitle( 325,211,gfx );
 	}
-	else
+	else if( isStarted )
 	{
 		goal.Draw( gfx );
 
